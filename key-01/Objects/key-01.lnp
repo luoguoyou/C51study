@@ -1,0 +1,6 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\main£¨2£©.obj",
+".\Objects\main(3).obj" 
+TO ".\Objects\key-01" 
+PRINT(".\Listings\key-01.m51") RAMSIZE(256) 
