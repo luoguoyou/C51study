@@ -1,4 +1,0 @@
-".\Objects\STARTUP.obj",
-".\Objects\main£¨2£©.obj" 
-TO ".\Objects\key-02" 
-PRINT(".\Listings\key-02.m51") RAMSIZE(256) 
