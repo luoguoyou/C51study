@@ -3,62 +3,31 @@
 bit key_flag=0;
 #define KEY1 P32
 #define KEY2 P33
-void Delay20ms()  //@11.0592MHz
-{
- unsigned char i, j, k;
 
- _nop_();
- _nop_();
- i = 1;
- j = 216;
- k = 35;
- do
- {
-  do
-  {
-   while (--k);
-  } while (--j);
- } while (--i);
-}
-unsigned char i;
-void setup()
+unsigned char i;//控制灯移位变量
+void setup()//外部中断0和io口初始化变量
 {
-    EA = 1;
-    EX0 =1;
-    EX1 =1;
-    IE0 =0;
-    IE1 =0;
-    IT0 =1;
-    IT1 =1;
-    P0M0 &= 0xf8; 
-    P0M1 &= 0xf8; 
-    P0 &=0XFF;
+	EA=1;//打开总中断
+	EX0=1;//外部中断0中断允许位，它打开等会才能进入中断服务子函数
+	EX1=1;//外部中断1中断允许位，它打开等会才能进入中断服务子函数
+	IE0=0;//外部中断0中断请求标志位，它等于1进入中断服务子函数
+	IE1=0;//外部中断1中断请求标志位，它等于1进入中断服务子函数
+	IT0=1;//外部中断0下降沿触发，就是按键按下才触发，抬起不触发
+	IT1=1;//外部中断1下降沿触发，就是按键按下才触发，抬起不触发
+	P0M1 &=0xf8;//设置P0口低三位为准双向口模式
+	P0M0 &=0xf8;//设置P0口低三位为准双向口模式
+	P0 &=0xff;//先把灯都灭了；
 }
-void key_see_about()//按键查询，看按键1或二是否按下
+void INT0_IE0() interrupt 0//外部中断0的中断服务子函数
 {
- 	if(KEY1==0)//如果按键1按下
- 	{
-  		Delay20ms();//延时20ms按键1消抖环节
-  		if(KEY1==0)//按键1还是低电平则标志为置1，以上为按键1消抖环节
-  		{
-  	 		key_flag=1;//按键标志位置1
-  		}
- 	} 
- 	if(KEY2==0)//如果按键2按下
- 	{
-  		Delay20ms();//延时20ms
-  		if(KEY2==0)//以上为按键2消抖环节
-  		{
-   			key_flag=1;//标志位置1
-  		}
- 	}
+	key_flag=1;//自定义按键一标志位，按键按下置1
+	while(!KEY1);//等待按键抬起
 }
-// void Timer0_ISR(void) interrupt 1
-// {
-//     key_flag =1;
-//     while(!KEY1);
-// }
-
+void INT0_IE1() interrupt 2//外部中断1的中断服务子函数
+{
+	key_flag=1;//自定义按键一标志位，按键按下置1
+	while(!KEY2);//等待按键抬起
+}
 void LED_turn()//led流转函数
 {
 	if(key_flag)//确认按键按下才进入亮灯
