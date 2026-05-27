@@ -1,0 +1,4 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj" 
+TO ".\Objects\timer-led" 
+PRINT(".\Listings\timer-led.m51") RAMSIZE(256) 

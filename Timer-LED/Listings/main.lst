@@ -1,0 +1,102 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2026 08:03:27 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.ls
+                    -t) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <STC8H.h>
+   2          #include "intrins.h"
+   3          
+   4          
+   5          #define key2 P33    //key2 bit address
+   6          
+   7          
+   8          void Timer0_Init(void)    //1毫秒@11.0592MHz
+   9          {
+  10   1        AUXR |= 0x80;     //set timer clock 1T mode
+  11   1        TMOD &= 0xF0;     //set timer mode
+  12   1        TL0 = 0xCD;       //set timer lower initial value
+  13   1        TH0 = 0xD4;       //set timer high initial value
+  14   1        TF0 = 0;        //clear TF0 flag
+  15   1        TR0 = 1;        //start timer0 counting
+  16   1          EA = 1;                 //open global interrupt
+  17   1          ET0 = 1;              //open timer0 interrupt
+  18   1      }
+  19          
+  20          void setup()//
+  21          {
+  22   1          P0M0 = 0x00; P0M1 = 0x00; //set P0 as quasi-bidirectional mode
+  23   1      
+  24   1      }
+  25          #define key1 P32  //key1 bit address
+  26          bit key1_last = 1, key1_now;
+  27          unsigned int key1_time = 0;
+  28          unsigned char key1_flag = 0; //0: no key action, 1: short press, 2: long press
+  29          void key_scan()
+  30          {
+  31   1          key1_now = key1;
+  32   1          if(key1_now == 0 && key1_last ==1)//key1 is starting to bepressed
+  33   1          {
+  34   2              key1_time = 0;
+  35   2          }
+  36   1          if(key1_now == 0)//key1 is pressing
+  37   1          {
+  38   2              key1_time ++;
+  39   2              if(key1_time >= 1000)
+  40   2              {
+  41   3                  if(key1_flag != 2) //if not already long pressed
+  42   3                  {
+  43   4                      key1_flag = 2;
+  44   4                  }
+  45   3              }
+  46   2          }
+  47   1          if(key1_now == 1 && key1_last == 0)
+  48   1          {
+  49   2              if(key1_time < 1000)
+  50   2              {
+  51   3                  key1_flag = 1;
+  52   3              }
+  53   2          }
+  54   1          key1_last = key1_now;
+C51 COMPILER V9.56.0.0   MAIN                                                              05/27/2026 08:03:27 PAGE 2   
+
+  55   1      }
+  56          void loop()
+  57          {
+  58   1      
+  59   1      }
+  60          
+  61          void timer0_isr(void) interrupt 1  //timer0 interrupt service routine
+  62          {
+  63   1      
+  64   1      
+  65   1      
+  66   1      }
+  67          
+  68          void main()
+  69          {
+  70   1          setup();
+  71   1          Timer0_Init();
+  72   1          while(1)
+  73   1          {
+  74   2              loop();
+  75   2          }
+  76   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    109    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
