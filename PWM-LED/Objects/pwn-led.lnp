@@ -1,0 +1,4 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj" 
+TO ".\Objects\pwn-led" 
+PRINT(".\Listings\pwn-led.m51") RAMSIZE(256) 
